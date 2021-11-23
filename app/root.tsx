@@ -8,7 +8,7 @@ import {
   Scripts,
   ScrollRestoration,
   useCatch,
-  useLocation
+  useLocation,
 } from "remix";
 import type { LinksFunction } from "remix";
 
@@ -23,9 +23,7 @@ import globalStylesUrl from "./styles/app.css";
  * https://remix.run/api/app#links
  */
 export let links: LinksFunction = () => {
-  return [
-    { rel: "stylesheet", href: globalStylesUrl },
-  ];
+  return [{ rel: "stylesheet", href: globalStylesUrl }];
 };
 
 /**
@@ -45,7 +43,7 @@ export default function App() {
 
 function Document({
   children,
-  title
+  title,
 }: {
   children: React.ReactNode;
   title?: string;
@@ -75,8 +73,12 @@ function Layout({ children }: React.PropsWithChildren<{}>) {
     <div className="remix-app">
       <header className="remix-app__header">
         <div className="container remix-app__header-content">
-          <Link to="/" title="Remix" className="remix-app__header-home-link">
-            <RemixLogo />
+          <Link
+            to="/logout"
+            title="Remix"
+            className="remix-app__header-home-link"
+          >
+            LOGOUT
           </Link>
           <nav aria-label="Main navigation" className="remix-app__header-nav">
             <ul>
@@ -230,7 +232,7 @@ const RouteChangeAnnouncement = React.memo(() => {
         position: "absolute",
         width: "1px",
         whiteSpace: "nowrap",
-        wordWrap: "normal"
+        wordWrap: "normal",
       }}
     >
       {innerHtml}

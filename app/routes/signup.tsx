@@ -6,14 +6,13 @@ import {
   useSearchParams,
 } from "remix";
 import { Schema, z } from "zod";
-import { createUserSession, login } from "~/auth.server";
+import { createUserSession, login, register } from "~/auth.server";
 import { db } from "~/utils/db.server";
 import getFormData from "~/utils/getFormData";
 
-const LoginObjectSchema = z.object({
+const RegisterObjectSchema = z.object({
   username: z.string(),
   password: z.string().min(5),
-  redirectTo: z.string().optional(),
 });
 
 // Create a response model
@@ -21,28 +20,19 @@ export const action: ActionFunction = async ({
   request,
 }): Promise<Response | any> => {
   const form = await request.formData();
-  const { username, password, redirectTo } = getFormData(
-    form,
-    LoginObjectSchema
-  );
-  const user = await login({ username, password });
+  const { username, password } = getFormData(form, RegisterObjectSchema);
+  const user = await register({ username, password });
   if (!user) {
     return {
       formError: `Username/Password combination is incorrect`,
     };
   }
-  return createUserSession(user.id, redirectTo ?? "/");
+  return createUserSession(user.id, "/");
 };
 
-export default function Login() {
-  const [searchParams] = useSearchParams();
+export default function Signup() {
   return (
-    <Form action="/login" method="post">
-      <input
-        type="hidden"
-        name="redirectTo"
-        value={searchParams.get("redirectTo") ?? undefined}
-      />
+    <Form action="/signup" method="post">
       <div className="">
         <label htmlFor="username-input"></label>
         <input type="text" name="username" required />
@@ -51,7 +41,7 @@ export default function Login() {
         <label htmlFor="password-input"></label>
         <input type="password" name="password" required />
       </div>
-      <button type="submit">Log In</button>
+      <button type="submit">Signup</button>
     </Form>
   );
 }
